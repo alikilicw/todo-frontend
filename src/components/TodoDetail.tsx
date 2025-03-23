@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { TextInput, FileInput, Button, Group, Image, Modal, Textarea } from '@mantine/core'
+import { TextInput, FileInput, Button, Group, Image, Modal, Textarea, Loader } from '@mantine/core'
 import { Todo } from './ListTodos'
 import { Constants } from '@/utils/constants'
 import Request from '@/utils/request'
@@ -21,6 +21,8 @@ export default function TodoDetail({
     updateTodo,
     deleteTodo
 }: TodoDetailProps) {
+    const [updateLoading, setUpdateLoading] = useState(false)
+    const [deleteLoading, setDeleteLoading] = useState(false)
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [thumbnail, setThumbnail] = useState<File | null>(null)
@@ -62,6 +64,7 @@ export default function TodoDetail({
     }
 
     const handleUpdate = async () => {
+        setUpdateLoading(true)
         const formData = new FormData()
 
         formData.append('title', title)
@@ -77,22 +80,24 @@ export default function TodoDetail({
         const response = await Request.patch({
             body: formData,
             endpoint: '/todos/' + todo!._id,
-            useToken: false
+            useToken: true
         })
 
         updateTodo(response)
+        setUpdateLoading(false)
 
         onClose()
     }
 
     const handleDelete = async () => {
+        setDeleteLoading(true)
         await Request.delete({
             endpoint: '/todos/' + todo!._id,
-            useToken: false
+            useToken: true
         })
 
         deleteTodo(todo)
-
+        setDeleteLoading(false)
         onClose()
     }
 
@@ -135,9 +140,11 @@ export default function TodoDetail({
             )}
 
             <Group mt="md" justify="space-evenly">
-                <Button onClick={handleUpdate}>Update Todo</Button>
-                <Button onClick={handleDelete} color="red">
-                    Delete Todo
+                <Button onClick={handleUpdate} disabled={updateLoading}>
+                    {updateLoading ? <Loader size="xs" /> : 'Update Todo'}
+                </Button>
+                <Button onClick={handleDelete} color="red" disabled={deleteLoading}>
+                    {deleteLoading ? <Loader size="xs" /> : 'Delete Todo'}
                 </Button>
             </Group>
         </Modal>
