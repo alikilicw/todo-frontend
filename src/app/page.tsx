@@ -2,12 +2,15 @@
 
 import React, { useEffect, useState } from 'react'
 import TodoDetail from '@/components/TodoDetail'
-import ListTodos, { Todo } from '@/components/ListTodos'
+import ListTodos from '@/components/ListTodos'
 import { Button, Center, Container, Flex, TextInput, Title } from '@mantine/core'
 import Request from '@/utils/request'
 import AddTodo from '@/components/AddTodo'
 import useTokenCheck from '@/hooks/token-check.hook'
 import { useRouter } from 'next/navigation'
+import { Todo } from '@/types/todo.type'
+
+const PAGE_SIZE = 2
 
 const App = () => {
     const token = useTokenCheck()
@@ -18,6 +21,7 @@ const App = () => {
     const [todos, setTodos] = useState<Todo[]>([])
     const [searchText, setSearchText] = useState<string>('')
     const router = useRouter()
+    const [totalTodoCount, setTotalTodoCount] = useState<number>(0)
 
     useEffect(() => {
         const verifyToken = async () => {
@@ -31,22 +35,31 @@ const App = () => {
     }, [token])
 
     useEffect(() => {
-        const a = async () => {
-            let searchQuery: string = ''
-            if (searchText.length >= 3) searchQuery = '?title=' + searchText
-
-            if (searchText == '' || searchQuery != '') {
-                const todos = await Request.get({
-                    endpoint: '/todos' + searchQuery,
-                    useToken: true
-                })
-                setTodos(todos)
-            } else {
-                setTodos([])
-            }
+        const loadTodos = async () => {
+            await fetchTodos()
         }
-        if (tokenVerified) a()
-    }, [searchText, tokenVerified])
+        if (tokenVerified) loadTodos()
+    }, [tokenVerified])
+
+    useEffect(() => {
+        const loadTodos = async () => {
+            if (searchText == '') setTodos([])
+            await fetchTodos()
+        }
+        if (searchText == '' || searchText.length >= 3) loadTodos()
+    }, [searchText])
+
+    const fetchTodos = async (page: number = 1, limit: number = PAGE_SIZE) => {
+        const title = searchText.length >= 3 ? '&title=' + searchText : ''
+
+        const response = await Request.get({
+            endpoint: `/todos?page=${page}&limit=${limit}` + title,
+            useToken: true
+        })
+        setTotalTodoCount(response.total)
+        console.log(response)
+        setTodos(response.data)
+    }
 
     const addNewTodo = (todo: Todo) => {
         console.log(todo)
@@ -98,7 +111,13 @@ const App = () => {
                         onChange={(event) => setSearchText(event.currentTarget.value)}
                     />
                 </Flex>
-                <ListTodos todos={todos} openTodoDetail={openTodoDetailModal} />
+                <ListTodos
+                    todos={todos}
+                    openTodoDetail={openTodoDetailModal}
+                    total={totalTodoCount}
+                    fetchTodos={fetchTodos}
+                    PAGE_SIZE={PAGE_SIZE}
+                />
                 <Center mt={50}>{todos.length == 0 && <p>Add Todo To Start</p>}</Center>
                 <AddTodo
                     opened={addTodoModalOpened}

@@ -1,34 +1,47 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Card, Image, Text, Title, Pagination, Container, Grid, Group, Flex } from '@mantine/core'
 import { Constants } from '@/utils/constants'
 import { Todo } from '@/types/todo.type'
 
-const PAGE_SIZE = 5
-
 export type TodoListProps = {
     todos: Todo[]
     openTodoDetail: Function
+    total: number
+    fetchTodos: Function
+    PAGE_SIZE: number
 }
 
-export default function TodoList({ todos, openTodoDetail }: TodoListProps) {
+export default function TodoList({
+    todos,
+    openTodoDetail,
+    total,
+    fetchTodos,
+    PAGE_SIZE
+}: TodoListProps) {
     const [activePage, setActivePage] = useState(1)
 
-    const startIdx = (activePage - 1) * PAGE_SIZE
-    const displayedTodos = todos.slice(startIdx, startIdx + PAGE_SIZE)
+    useEffect(() => {
+        console.log('AAAA')
+
+        const a = async () => {
+            await fetchTodos(activePage, PAGE_SIZE)
+        }
+        a()
+    }, [activePage])
 
     return (
         <Container size="sm">
             <Pagination
-                total={Math.ceil(todos.length / PAGE_SIZE)}
+                total={Math.ceil(total / PAGE_SIZE)}
                 value={activePage}
                 onChange={setActivePage}
                 mb="lg"
                 mt="lg"
             />
             <Grid>
-                {displayedTodos.map((todo, index) => (
+                {todos.map((todo, index) => (
                     <Grid.Col span={12} key={index}>
                         <Card
                             shadow="md"
