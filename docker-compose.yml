@@ -1,0 +1,15 @@
+version: '3'
+services:
+    web:
+        container_name: todo_frontend
+        build:
+            context: .
+        image: todo_frontend
+        ports:
+            - '3000:3000'
+        networks:
+            - todo_network
+
+networks:
+    todo_network:
+        external: true
