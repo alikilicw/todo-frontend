@@ -1,6 +1,8 @@
 export type Todo = {
+    _id: number
     title: string
-    description: string | null
-    thumbnailKey: string | null
-    file: File | null
+    description: string
+    thumbnailKey: string
+    fileKey: string
+    recommendations?: string
 }

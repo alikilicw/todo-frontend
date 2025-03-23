@@ -1,16 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { Card, Image, Text, Title, Pagination, Container, Grid, Group } from '@mantine/core'
+import { Card, Image, Text, Title, Pagination, Container, Grid, Group, Flex } from '@mantine/core'
 import { Constants } from '@/utils/constants'
-
-export type Todo = {
-    _id: number
-    title: string
-    description: string
-    thumbnailKey: string
-    fileKey: string
-}
+import { Todo } from '@/types/todo.type'
 
 const PAGE_SIZE = 5
 
@@ -45,7 +38,7 @@ export default function TodoList({ todos, openTodoDetail }: TodoListProps) {
                             style={{ cursor: 'pointer' }}
                             onClick={() => openTodoDetail(todo)}
                         >
-                            <Group justify="space-between" align="center">
+                            <Flex justify="space-between" align="center">
                                 <div>
                                     <Title order={3}>{todo.title}</Title>
                                     <Text size="sm" mt="xs">
@@ -55,13 +48,17 @@ export default function TodoList({ todos, openTodoDetail }: TodoListProps) {
                                 {todo.thumbnailKey && (
                                     <Image
                                         src={`${Constants.BACKEND_URL}/files?fileKey=${todo.thumbnailKey}`}
-                                        width={70}
-                                        height={70}
+                                        width={100}
+                                        height={100}
                                         alt={todo.title}
                                         radius="md"
                                     />
                                 )}
-                            </Group>
+                            </Flex>
+                            <Title order={5}>AI Suggestions</Title>
+                            <Text size="sm" mt="xs" style={{ whiteSpace: 'pre-wrap' }}>
+                                {todo.recommendations}
+                            </Text>
                         </Card>
                     </Grid.Col>
                 ))}

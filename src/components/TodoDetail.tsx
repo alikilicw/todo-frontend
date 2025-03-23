@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { TextInput, FileInput, Button, Group, Image, Modal, Textarea, Loader } from '@mantine/core'
-import { Todo } from './ListTodos'
 import { Constants } from '@/utils/constants'
 import Request from '@/utils/request'
+import { Todo } from '@/types/todo.type'
 
 export type TodoDetailProps = {
     todo: Todo | undefined
