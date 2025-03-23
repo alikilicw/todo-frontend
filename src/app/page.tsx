@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import TodoDetail from '@/components/TodoDetail'
 import ListTodos, { Todo } from '@/components/ListTodos'
-import { Button, Container, Flex, TextInput, Title } from '@mantine/core'
+import { Button, Center, Container, Flex, TextInput, Title } from '@mantine/core'
 import Request from '@/utils/request'
 import AddTodo from '@/components/AddTodo'
 import useTokenCheck from '@/hooks/token-check.hook'
@@ -20,8 +20,6 @@ const App = () => {
     const router = useRouter()
 
     useEffect(() => {
-        console.log('A')
-
         const verifyToken = async () => {
             if (token == 'invalid') {
                 router.push('/auth/login')
@@ -33,18 +31,15 @@ const App = () => {
     }, [token])
 
     useEffect(() => {
-        console.log('B')
-
         const a = async () => {
-            console.log('C')
-
             let searchQuery: string = ''
             if (searchText.length >= 3) searchQuery = '?title=' + searchText
 
             if (searchText == '' || searchQuery != '') {
-                console.log('İstek Atıldı')
-
-                const todos = await Request.get({ endpoint: '/todos' + searchQuery })
+                const todos = await Request.get({
+                    endpoint: '/todos' + searchQuery,
+                    useToken: true
+                })
                 setTodos(todos)
             } else {
                 setTodos([])
@@ -104,6 +99,7 @@ const App = () => {
                     />
                 </Flex>
                 <ListTodos todos={todos} openTodoDetail={openTodoDetailModal} />
+                <Center mt={50}>{todos.length == 0 && <p>Add Todo To Start</p>}</Center>
                 <AddTodo
                     opened={addTodoModalOpened}
                     onClose={closeAddTodoModal}

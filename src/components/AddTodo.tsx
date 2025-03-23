@@ -10,7 +10,8 @@ import {
     Modal,
     Textarea,
     Text,
-    ActionIcon
+    ActionIcon,
+    Loader
 } from '@mantine/core'
 import Request from '@/utils/request'
 
@@ -21,6 +22,7 @@ export type AddTodoProps = {
 }
 
 export default function AddTodo({ opened, onClose, addNewTodo }: AddTodoProps) {
+    const [loading, setLoading] = useState(false)
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [thumbnail, setThumbnail] = useState<File | null>(null)
@@ -40,6 +42,7 @@ export default function AddTodo({ opened, onClose, addNewTodo }: AddTodoProps) {
 
     const handleSubmit = async () => {
         if (title != '') {
+            setLoading(true)
             const formData = new FormData()
 
             formData.append('title', title)
@@ -54,10 +57,11 @@ export default function AddTodo({ opened, onClose, addNewTodo }: AddTodoProps) {
             const response = await Request.post({
                 body: formData,
                 endpoint: '/todos',
-                useToken: false
+                useToken: true
             })
 
             addNewTodo(response)
+            setLoading(false)
         }
 
         onClose()
@@ -95,7 +99,9 @@ export default function AddTodo({ opened, onClose, addNewTodo }: AddTodoProps) {
             />
 
             <Group mt="md">
-                <Button onClick={handleSubmit}>Add Todo</Button>
+                <Button onClick={handleSubmit} disabled={loading}>
+                    {loading ? <Loader size="xs" /> : 'Add Todo'}
+                </Button>
             </Group>
         </Modal>
     )

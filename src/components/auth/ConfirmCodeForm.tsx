@@ -1,5 +1,6 @@
 'use client'
 
+import { useShortTermStorage } from '@/hooks/store.hook'
 import Request from '@/utils/request'
 import { TextInput, PasswordInput, Button, Box, PinInput, Text, Loader } from '@mantine/core'
 import { useForm } from '@mantine/form'
@@ -8,6 +9,7 @@ import { useState, useEffect } from 'react'
 
 export default function ConfirmCode() {
     const [loading, setLoading] = useState(false)
+    const { deleteKey } = useShortTermStorage()
     const router = useRouter()
     const [timer, setTimer] = useState(150)
 
@@ -33,6 +35,8 @@ export default function ConfirmCode() {
             console.log('Code Confirmed')
 
             setLoading(true)
+            deleteKey('authToken')
+            localStorage.removeItem('authToken')
             setTimeout(() => {
                 router.push('/auth/login')
                 setLoading(false)
