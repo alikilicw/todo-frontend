@@ -2,6 +2,10 @@
 
 This document explains how to set up and run a frontend project using Next.js.
 
+The project is running on a docker container where located in Digitalocean cloud server. It can be reachable by this url: http://134.209.118.95:3000/
+
+A sample user can be created by registering in usual process.
+
 ## Requirements
 
 -   **Node.js**: v18 or later
