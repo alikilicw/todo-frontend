@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next.js TODO Project Setup
 
-## Getting Started
+This document explains how to set up and run a frontend project using Next.js.
 
-First, run the development server:
+## Requirements
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+-   **Node.js**: v18 or later
+-   **NPM** or **Yarn**
+
+## Clone the Repository
+
+```
+git clone https://github.com/alikilicw/todo-frontend
+cd todo-frontend
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Install Dependencies
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+If using NPM:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+npm install
+```
 
-## Learn More
+If using Yarn:
 
-To learn more about Next.js, take a look at the following resources:
+```
+yarn install
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Configure Environment Variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Create a `<span>.env</span>` file in the root directory and configure it as follows:
 
-## Deploy on Vercel
+```
+NEXT_PUBLIC_BACKEND_URL=http://<backend_host>:<backend_port>
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Adjust the necessary variables according to your environment.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Run the Project
+
+### Run in Development Mode
+
+```
+npm run dev
+```
+
+### Build and Run in Production Mode
+
+```
+npm run build
+npm run start
+```
+
+## Run with Docker
+
+If using Docker, follow these steps:

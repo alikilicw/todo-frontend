@@ -1,6 +1,6 @@
 version: '3'
 services:
-    web:
+    todo_frontend:
         container_name: todo_frontend
         build:
             context: .
